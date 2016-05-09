@@ -1,0 +1,382 @@
+<header header="Data SISWA" />
+<div class="row">
+	<div class="col-xs-12">
+		<div class="row">
+			<div class="col-xs-12">
+				<button class="btn btn-primary col-md-1 col-xs-12" ng-click="openForm(siswa)">
+					<span class="fa fa-plus"></span>
+				</button>
+
+				<form ng-submit="searchParams.page=1;search();" class="pull-right col-md-6 col-xs-12">
+					<fieldset>
+						<div class="form-group col-md-10 col-xs-12">
+							<input type="text" class="form-control" ng-model="searchParams.nis" placeholder="Search..." autofocus>
+						</div>
+						<button type="submit" value="Search" class="btn btn-default col-md-2 col-xs-12">
+							<span class="fa fa-search"></span>
+						</button>
+					</fieldset>
+				</form>
+			</div>
+		</div>
+		<br>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="box">
+					<div class="box-header">
+					</div>
+					<div class="box-body">
+						<div class="table-responsive">
+							<table class="table">
+								<thead>
+									<tr>
+										<th>NIS</th>
+										<th>NAMA</th>
+										<th>TTL</th>
+										<th>Kelamin</th>
+										<th>Agama</th>
+										<th>Kelas</th>
+										<th>Alamat</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="siswa in siswas">
+										<td><a href="" ng-click="openForm(siswa)"><span ng-bind="siswa.nis"></a></span></td>
+										<td ng-bind="siswa.nama"></td>
+										<td ng-bind="siswa.tplahir + ' ,' + siswa.tglahir"></td>
+										<td ng-bind="siswa.kelamin"></td>
+										<td ng-bind="siswa.agama"></td>
+										<td ng-bind="siswa.kelas"></td>
+										<td ng-bind="siswa.alamat.jln + ' ' + siswa.alamat.kel + ' ' + siswa.alamat.kec + ' ' + siswa.alamat.kota + ' ' + siswa.alamat.prop + ' ' + siswa.alamat.kodepos"></td>										
+										<td>
+											<a href="" class="btn btn-default btn-xs" ng-click="openOrtu(siswa)" title="Data Orang Tua {{ siswa.nama }}">
+												<span class="fa fa-home"></span>
+											</a>
+											<a href="" class="btn btn-default btn-xs" ng-click="openForm(siswa)" title="Edit {{ siswa.nama }}">
+												<span class="fa fa-edit"></span>
+											</a>
+											<a href="" class="btn btn-danger btn-xs" ng-click="remove(siswa)" title="Delete {{ siswa.nama }}">
+												<span class="fa fa-trash"></span>
+											</a>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="box-footer">
+						<div class="row">
+							<div class="col-md-6">
+								<pagination total-items="siswas.meta.totalElements" ng-model="page" items-per-page="siswas.meta.size" ng-change="search(searchParams)"></pagination>
+							</div>
+							<div class="col-md-6">
+								<div class="pagination alert pull-right">Found <span ng-bind="siswas.meta.totalElements"></span> entries</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div><!-- /.col -->
+</div>
+
+<script type="text/ng-template" id="siswa.form.html">
+	<div class="modal-header">
+		<h3 class="modal-title">Add Siswa</h3>
+	</div>
+	<form name="siswaForm" ng-submit="submit(siswa, siswaForm)" novalidate validation-schema schema="siswa">
+		<div class="modal-body">
+			<fieldset>
+			<div class="row">
+			  <div class="col-md-6">
+				<div class="form-group">
+					<label class="control-label" for="nis">NIS</label>
+					<div class="controls">
+						<input type="text" id="nis" name="nis" class="form-control" ng-model="siswa.nis" required>
+					</div>
+				</div>
+			  </div>
+			  <div class="col-md-6">
+				<div class="form-group">
+					<label class="control-label" for="nik">NIK</label>
+					<div class="controls">
+						<input type="text" id="nik" name="nik" class="form-control" ng-model="siswa.nik" required>
+					</div>
+				</div>
+			  </div>
+			</div>
+			<div class="row">
+			  <div class="col-md-6">
+				<div class="form-group">
+					<label class="control-label" for="nama">NAMA</label>
+					<div class="controls">
+						<input type="text" id="nama" name="nama" class="form-control" ng-model="siswa.nama" required>
+					</div>
+				</div>
+			  </div>
+			  <div class="col-md-6">
+			   <div class="form-group">
+				<label class="control-label" for="agama">AGAMA</label>
+				<div class="controls">
+					<ui-select ng-model="siswa.agama"">
+						<ui-select-match placeholder="Pilih Agama...">{{ $item.name }}</ui-select-match>
+						<ui-select-choices repeat="agama in agamas" refresh="loadAgama($select.search)">
+							<div ng-bind-html="agama.agama | highlight: $select.search"></div>
+							<!-- <small ng-bind-html="role.description | highlight: $select.search"></small> -->
+						</ui-select-choices>
+					</ui-select>
+				</div>
+			   </div>
+			  </div>
+			</div>
+			<div class="row">
+			  <div class="col-md-6">
+				<div class="form-group">
+					<label class="control-label" for="nama">Tempat Lahir</label>
+					<div class="controls">
+						<input type="text" id="tplahir" name="tplahir" class="form-control" ng-model="siswa.tplahir">
+					</div>
+			 	</div>
+			  </div>
+			  <div class="col-md-6">
+				<div class="form-group">
+					<label class="control-label" for="nama">Tanggal Lahir (DD MMMM YYYY : 09 Mei 2016)</label>
+					<div class="controls">
+						<input type="text" id="tglahir" name="tglahir" class="form-control" ng-model="siswa.tglahir">
+					</div>
+				</div>
+			  </div>
+			</div>
+			<div class="row">
+			  <div class="col-md-4">
+				<div class="form-group">
+					<label class="control-label" for="nama">Kewarganegaraan</label>
+					<div class="controls">
+						<input type="text" id="warga" name="warga" class="form-control" ng-model="siswa.warga">
+					</div>
+				</div>
+			  </div>
+			  <div class="col-md-4">
+				<div class="form-group">
+					<label class="control-label" for="kelamin">KELAMIN</label>
+					<div class="controls">
+						<select id="kelamin" name="kelamin" class="form-control" ng-model="siswa.kelamin">
+							<option>Laki-Laki</option>
+							<option>Perempuan</option>
+						</select>
+					</div>
+				</div>
+			   </div>
+			  <div class="col-md-4">
+				<div class="form-group">
+					<label class="control-label" for="staktif">STATUS KEAKTIFAN</label>
+					<div class="controls">
+						<select id="st_aktif" name="st_aktif" class="form-control" ng-model="siswa.st_aktif">
+							<option>Aktif</option>
+							<option>Mutasi</option>
+							<option>Keluar</option>
+							<option>Lulus</option>
+						</select>
+					</div>
+				</div>
+			   </div>
+			  </div>
+
+				<div class="row">
+					<div class="col-md-4">
+						<div class="form-group">
+							<label class="control-label" for="alamat">Alamat</label>
+							<label class="control-label" for="alamat"> Jalan/Dusun/Dukuh </label>
+							<div class="controls">
+								<input type="text" id="jln" name="jln" class="form-control" ng-model="siswa.alamat.jln" >
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label class="control-label" for="alamat"> Desa/Kelurahan </label>
+							<div class="controls">
+								<input type="text" id="kel" name="kel" class="form-control" ng-model="siswa.alamat.kel" >
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label class="control-label" for="alamat"> Kecamatan </label>
+							<div class="controls">
+								<input type="text" id="kec" name="kec" class="form-control" ng-model="siswa.alamat.kec" >
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-4">
+						<div class="form-group">
+							<label class="control-label" for="alamat"> Kota/Kabupaten </label>
+							<div class="controls">
+								<input type="text" id="kota" name="kota" class="form-control" ng-model="siswa.alamat.kota" >
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label class="control-label" for="alamat"> Propinsi </label>
+							<div class="controls">
+								<input type="text" id="prop" name="prop" class="form-control" ng-model="siswa.alamat.prop" >
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group">
+							<label class="control-label" for="alamat"> Kode Pos </label>
+							<div class="controls">
+								<input type="text" id="kodepos" name="kodepos" class="form-control" ng-model="siswa.alamat.kodepos" >
+							</div>
+						</div>
+					</div>
+			</fieldset>
+		</div>
+		<div class="modal-footer">
+			<input type="submit" value="Save" class="btn btn-primary col-md-3 col-xs-12">
+			<span class="label label-danger" ng-show="error">Ops something went wrong!</span>
+		</div>
+	</form>
+</script>
+
+<script type="text/ng-template" id="siswa.ortu.html">
+	<div class="modal-header">
+		<h3 class="modal-title">Data Orang Tua/Wali <small ng-bind="'(' + siswa.nama + ')'"></small></h3>
+	</div>
+	<form name="siswaForm" ng-submit="submit(siswa, siswaForm)" novalidate validation-schema schema="siswa">
+		<div class="modal-body">
+			<fieldset>
+				<div class="row">
+					<div class="col-md-6">
+					<div class="form-group">
+						<label class="control-label" for="nama">NAMA AYAH</label>
+						<div class="controls">
+							<input type="text" id="nama_a" name="nama_a" class="form-control" ng-model="siswa.ortu.nama_a">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label" for="nama">PEKERJAAN AYAH</label>
+						<div class="controls">
+							<input type="text" id="kerja_a" name="kerja_a" class="form-control" ng-model="siswa.ortu.kerja_a">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label" for="nama">AGAMA AYAH</label>
+						<div class="controls">
+							<input type="text" id="agama_a" name="agama_a" class="form-control" ng-model="siswa.ortu.agama_a">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label" for="nama">TELP AYAH</label>
+						<div class="controls">
+							<input type="text" id="telp_a" name="telp_a" class="form-control" ng-model="siswa.ortu.telp_a">
+						</div>
+					</div>
+				</div>
+					<div class="col-md-6">
+					<div class="form-group">
+						<label class="control-label" for="nama">NAMA IBU</label>
+						<div class="controls">
+							<input type="text" id="nama_i" name="nama_i" class="form-control" ng-model="siswa.ortu.nama_i">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label" for="nama">PEKERJAAN IBU</label>
+						<div class="controls">
+							<input type="text" id="kerja_i" name="kerja_i" class="form-control" ng-model="siswa.ortu.kerja_i">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label" for="nama">AGAMA IBU</label>
+						<div class="controls">
+							<input type="text" id="agama_i" name="agama_i" class="form-control" ng-model="siswa.ortu.agama_i">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label" for="nama">TELP IBU</label>
+						<div class="controls">
+							<input type="text" id="telp_i" name="telp_i" class="form-control" ng-model="siswa.ortu.telp_i">
+						</div>
+					</div>
+				  </div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+					<div class="form-group">
+						<label class="control-label" for="nama">NAMA WALI</label>
+						<div class="controls">
+							<input type="text" id="nama_w" name="nama_w" class="form-control" ng-model="siswa.ortu.nama_w">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label" for="nama">PEKERJAAN WALI</label>
+						<div class="controls">
+							<input type="text" id="kerja_w" name="kerja_w" class="form-control" ng-model="siswa.ortu.kerja_w">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label" for="nama">AGAMA WALI</label>
+						<div class="controls">
+							<input type="text" id="agama_w" name="agama_w" class="form-control" ng-model="siswa.ortu.agama_w">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label" for="nama">TELP WALI</label>
+						<div class="controls">
+							<input type="text" id="telp_w" name="telp_w" class="form-control" ng-model="siswa.ortu.telp_w">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label" for="nama">ALAMAT WALI</label>
+						<div class="controls">
+							<input type="text" id="alamat_w" name="alamat_w" class="form-control" ng-model="siswa.ortu.alamat_w">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label" for="nama">Hubungan Dengan Siswa</label>
+						<div class="controls">
+							<input type="text" id="st_w" name="st_w" class="form-control" ng-model="siswa.ortu.st_w">
+						</div>
+					</div>
+				</div>
+				</div>
+			</fieldset>
+		</div>
+		<div class="modal-footer">
+			<input type="submit" value="Simpan" class="btn btn-primary col-md-3 col-xs-12">
+			<span class="label label-danger" ng-show="error">Ops something went wrong!</span>
+		</div>
+	</form>
+</script>
+<!--  
+<script type="text/ng-template" id="user.role.html">
+	<div class="modal-header">
+		<h3 class="modal-title">Add role <small ng-bind="'(' + user.username + ')'"></small></h3>
+	</div>
+	<div class="modal-body">
+		<fieldset>
+			<div class="form-group">
+				<label class="control-label" for="roles">Roles</label>
+				<div class="controls">
+					<ui-select multiple ng-model="user.roles" on-select="addRole($item)" on-remove="removeRole($item)">
+						<ui-select-match placeholder="Select roles...">{{ $item.name }}</ui-select-match>
+						<ui-select-choices repeat="role in roles" refresh="loadRoles($select.search)">
+							<div ng-bind-html="role.name | highlight: $select.search"></div>
+							<small ng-bind-html="role.description | highlight: $select.search"></small>
+						</ui-select-choices>
+					</ui-select>
+				</div>
+			</div>
+		</fieldset>
+		<div class="modal-footer">
+			<a href="" class="btn btn-primary col-md-3 col-xs-12" ng-click="done()">Done</a>
+			<span class="label label-danger" ng-show="error">Ops something went wrong!</span>
+		</div>
+	</div>
+</script>
+-->

@@ -1,0 +1,106 @@
+<header header="Kelas" />
+<div class="row">
+	<div class="col-xs-12">
+		<div class="row">
+			<div class="col-xs-12">
+				<button class="btn btn-primary col-md-1 col-xs-12" ng-click="openForm()">
+					<span class="fa fa-plus"></span>
+				</button>
+
+				<form ng-submit="searchParams.page=1;search();" class="pull-right col-md-6 col-xs-12">
+					<fieldset>
+						<div class="form-group col-md-10 col-xs-12">
+							<input type="text" class="form-control" ng-model="searchParams.kelas" placeholder="Search..." autofocus ng-change="search(searchParams.kelas)">
+						</div>
+						<button type="submit" value="Search" class="btn btn-default col-md-2 col-xs-12">
+							<span class="fa fa-search"></span>
+						</button>
+					</fieldset>
+				</form>
+			</div>
+		</div>
+		<br>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="box">
+					<div class="box-header">
+					</div>
+					<div class="box-body">
+						<div class="table-responsive">
+							<table class="table">
+								<thead>
+									<tr>
+										<th>ID</th>
+										<th>Kelas</th>
+										<th>Jurusan</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="kelas in kelass">
+										<td><a href="" ng-click="openForm(kelas)"><span ng-bind="kelas.id"></a></span></td>
+										<td ng-bind="kelas.kelas"></td>
+										<td ng-bind="kelas.jurusan"></td>
+										<td>
+											<a href="" class="btn btn-info btn-xs" ng-click="openForm(kelas)">
+												<span class="fa fa-edit"></span>
+											</a>
+
+											<a href="" class="btn btn-danger btn-xs" ng-click="remove(kelas)">
+												<span class="fa fa-trash"></span>
+											</a>
+
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="box-footer">
+						<div class="row">
+							<div class="col-md-6">
+								<pagination total-items="kelass.meta.totalElements" ng-model="page" items-per-page="kelass.meta.size" ng-change="search(searchParams)"></pagination>
+							</div>
+							<div class="col-md-6">
+								<div class="pagination alert pull-right">Found <span ng-bind="kelass.meta.totalElements"></span> entries</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div><!-- /.col -->
+</div>
+
+<script type="text/ng-template" id="kelas.form.html">
+	<div class="modal-header">
+		<button type="button" class="close" ng-click="tutup()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		<h3 class="modal-title">Add Kelas</h3>
+	</div>
+	<form name="kelasForm" ng-submit="submit(kelas, kelasForm)" novalidate validation-schema schema="kelas" >
+		<div class="modal-body">
+			<fieldset>
+				<div class="form-group">
+					<label class="control-label" for="title">Kelas</label>
+					<div class="controls">
+						<input type="text" id="kelas" name="kelas" class="form-control" ng-model="kelas.kelas" required>
+					</div>
+				</div>
+			<!--	<div class="form-group">
+					<label class="control-label" for="content">Isi Berita</label>
+					<div class="  controls">
+						<!-- <textarea ng-controller="testCtrl" text-angular rows="2" id="jurusan" name="jurusan" class="form-control" ng-model="kelas.jurusan"></textarea>
+					 -->	
+				<!--		<text-angular style="min-height: 150px; height: 200; overflow: auto;" id="jurusan" name="jurusan" class="form-control" ng-model="kelas.jurusan"></text-angular>
+					</div>
+				</div>
+			-->
+			</fieldset>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default fa fa-close" ng-click="tutup()">Tutup</button>
+			<input type="submit" value="Save" class="btn btn-primary col-md-3 col-xs-12 fa fa-save">
+			<span class="label label-danger" ng-show="error">Ops something went wrong!</span>
+		</div>
+	</form>
+</script>

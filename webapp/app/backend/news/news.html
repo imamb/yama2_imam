@@ -1,0 +1,149 @@
+<header header="News" />
+<div class="row">
+	<div class="col-xs-12">
+		<div class="row">
+			<div class="col-xs-12">
+				<button class="btn btn-primary col-md-1 col-xs-12" ng-click="openForm()">
+					<span class="fa fa-plus"></span>
+				</button>
+
+				<form ng-submit="searchParams.page=1;search();" class="pull-right col-md-6 col-xs-12">
+					<fieldset>
+						<div class="form-group col-md-10 col-xs-12">
+							<input type="text" class="form-control" ng-model="searchParams.title" placeholder="Search..." autofocus ng-change="search(searchParams.title)">
+						</div>
+						<button type="submit" value="Search" class="btn btn-default col-md-2 col-xs-12">
+							<span class="fa fa-search"></span>
+						</button>
+					</fieldset>
+				</form>
+			<!--  <span ng-bind="currentUser.username + ' ' + currentUser.name.first + ' ' + currentUser.name.last"></span> -->	
+			</div>
+		</div>
+		<br>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="box">
+					<div class="box-header">
+					</div>
+					<div class="box-body">
+						<div class="table-responsive">
+							<table class="table">
+								<thead>
+									<tr>
+										<th>Judul</th>
+										<th>Konten</th>
+										<th>Kategory</th>
+										<th>Kontributor</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="news in newss">
+										<td><a href="" ng-click="openForm(news)"><span ng-bind="news.title"></a></span></td>
+										<td ng-bind="news.content"></td>
+										<td>
+											<a class="btn btn-xs btn-default" ng-click="addCategory(news)">
+												<i class="glyphicon glyphicon-pencil" ng-show="news.categorys.length > 0"></i>
+												<i class="glyphicon glyphicon-plus" ng-show="news.categorys.length < 1"></i>
+											</a>
+											<span ng-repeat="r in news.categorys">
+											<span class="label label-default" ng-bind="r.kategori"></span>&nbsp;
+											</span>
+										</td>
+										<td ng-bind="news.pembuat"></td>
+										<td>
+											<a href="" class="btn btn-info btn-xs" ng-click="openForm(news)">
+												<span class="fa fa-edit"></span>
+											</a>
+
+											<a href="" class="btn btn-danger btn-xs" ng-click="remove(news)">
+												<span class="fa fa-trash"></span>
+											</a>
+
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="box-footer">
+						<div class="row">
+							<div class="col-md-6">
+								<pagination total-items="newss.meta.totalElements" ng-model="page" items-per-page="newss.meta.size" ng-change="search(searchParams)"></pagination>
+							</div>
+							<div class="col-md-6">
+								<div class="pagination alert pull-right">Found <span ng-bind="newss.meta.totalElements"></span> entries</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div><!-- /.col -->
+</div>
+
+<script type="text/ng-template" id="news.form.html">
+	<div class="modal-header">
+		<button type="button" class="close" ng-click="tutup()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		<h3 class="modal-title">Add News</h3>
+	</div>
+	<form name="newsForm" ng-submit="submit(news, newsForm)" novalidate validation-schema schema="news" ng-init="news.pembuat =currentUser.username" >
+		<div class="modal-body">
+			<fieldset>
+				<div class="form-group">
+					<label class="control-label" for="title">Title</label>
+					<div class="controls">
+						<input type="text" id="title" name="title" class="form-control" ng-model="news.title" required>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label" for="content">Isi Berita</label>
+					<div class="  controls">
+						<!-- <textarea ng-controller="testCtrl" text-angular rows="2" id="content" name="content" class="form-control" ng-model="news.content"></textarea>
+						-->
+						<text-angular style="min-height: 150px; height: 200; overflow: auto;" id="content" name="content" class="form-control" ng-model="news.content"></text-angular>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label" for="pembuat">Kontributor</label>
+					<div class="controls">
+						<input type="hidden" id="pembuat" name="pembuat" class="form-control" ng-model="news.pembuat">
+						<span ng-bind="currentUser.username"></span>
+						<!-- <span ng-model="news.pembuat"></span>  value={{currentUser.username}}-->
+					</div>
+				</div>
+			</fieldset>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default fa fa-close" ng-click="tutup()">Tutup</button>
+			<input type="submit" value="Save" class="btn btn-primary col-md-3 col-xs-12 fa fa-save">
+			<span class="label label-danger" ng-show="error">Ops something went wrong!</span>
+		</div>
+	</form>
+</script>
+<script type="text/ng-template" id="news.category.html">
+	<div class="modal-header">
+		<h3 class="modal-title">Tambah Kategori <small ng-bind="'(' + news.title + ')'"></small></h3>
+	</div>
+	<div class="modal-body">
+		<fieldset>
+			<div class="form-group">
+				<label class="control-label" for="categorys">Kategori</label>
+				<div class="controls">
+					<ui-select multiple ng-model="news.categorys" on-select="addCategory($item)" on-remove="removeCategory($item)">
+						<ui-select-match placeholder="Select Kategori...">{{ $item.kategori }}</ui-select-match>
+						<ui-select-choices repeat="category in categorys" refresh="loadCategorys($select.search)">
+							<div ng-bind-html="category.kategory | highlight: $select.search"></div>
+							<small ng-bind-html="category.createDate | highlight: $select.search"></small>
+						</ui-select-choices>
+					</ui-select>
+				</div>
+			</div>
+		</fieldset>
+		<div class="modal-footer">
+			<a href="" class="btn btn-primary col-md-3 col-xs-12" ng-click="done()">Done</a>
+			<span class="label label-danger" ng-show="error">Ops something went wrong!</span>
+		</div>
+	</div>
+</script>
