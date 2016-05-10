@@ -40,11 +40,11 @@
 										<td><a href="" ng-click="openForm(category)"><span ng-bind="category.id"></a></span></td>
 										<td ng-bind="category.kategori"></td>
 										<td>
-											<a href="" class="btn btn-info btn-xs" ng-click="openForm(category)">
+											<a href="" class="btn btn-info btn-xs" ng-click="openForm(category)" title="Edit Kategori {{ category.kategori }}">
 												<span class="fa fa-edit"></span>
 											</a>
 
-											<a href="" class="btn btn-danger btn-xs" ng-click="remove(category)">
+											<a href="" class="btn btn-danger btn-xs" ng-click="remove(category)" title="Hapus Kategori {{ category.kategori }}">
 												<span class="fa fa-trash"></span>
 											</a>
 

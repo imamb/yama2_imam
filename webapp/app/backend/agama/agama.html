@@ -40,11 +40,11 @@
 										<td><a href="" ng-click="openForm(agama)"><span ng-bind="agama.id"></a></span></td>
 										<td ng-bind="agama.agama"></td>
 										<td>
-											<a href="" class="btn btn-info btn-xs" ng-click="openForm(agama)">
+											<a href="" class="btn btn-info btn-xs" ng-click="openForm(agama)" title="Edit Agama {{ agama.agama }}">
 												<span class="fa fa-edit"></span>
 											</a>
 
-											<a href="" class="btn btn-danger btn-xs" ng-click="remove(agama)">
+											<a href="" class="btn btn-danger btn-xs" ng-click="remove(agama)" title="Hapus Agama {{ agama.agama }}">
 												<span class="fa fa-trash"></span>
 											</a>
 

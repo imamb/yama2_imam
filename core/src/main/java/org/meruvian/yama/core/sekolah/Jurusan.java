@@ -14,11 +14,11 @@ public class Jurusan extends DefaultPersistence{
 	
 	@NotNull
 	@Column(name = "kode", unique = true, nullable = false)
-	public String getJur() {
+	public String getKode() {
 		return kode;
 	}
 
-	public void setJur(String kode) {
+	public void setKode(String kode) {
 		this.kode = kode;
 	}
 	

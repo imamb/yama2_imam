@@ -1,13 +1,20 @@
 package tot6.news;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "category")
@@ -15,6 +22,7 @@ public class Category {
 	private long id;
 	private String kategori;
 	private Date createDate;
+	private List<NewsCategory> newss=new ArrayList<NewsCategory>();
 	/* private String title;
 	private String content;
 	private Date createDate;
@@ -64,5 +72,15 @@ public class Category {
 
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
+	}
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "category", cascade = { CascadeType.REMOVE }, fetch = FetchType.LAZY)
+	public List<NewsCategory> getNewss(){
+		return newss;
+	}
+	
+	public void setNewss(List<NewsCategory> newss){
+		this.newss=newss;
 	}
 }

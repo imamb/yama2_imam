@@ -54,7 +54,7 @@ public class RestJurusanService implements JurusanService {
 	@Transactional
 	public Jurusan updateJurusan(Jurusan jurusan){
 		Jurusan j=jurusanRepository.findById(jurusan.getId());
-			j.setJur(jurusan.getJur());
+			j.setKode(jurusan.getKode());
 			j.setKeterangan(jurusan.getKeterangan());
 			return j;	
 	}

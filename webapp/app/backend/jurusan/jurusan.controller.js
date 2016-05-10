@@ -35,8 +35,8 @@ angular.module('yamaApp').controller('JurusanCtrl', function ($scope, $modal, $l
 			}
 		});
 		
-		modal.result.then(function(j) {
-			$scope.searchParams.q = j.keterangan;
+		modal.result.then(function(n) {
+			$scope.searchParams.q = n.keterangan;
 			$scope.search();
 		});
 	};
@@ -44,7 +44,7 @@ angular.module('yamaApp').controller('JurusanCtrl', function ($scope, $modal, $l
 	
 		// Open popup confirmation and delete user if user choose yes
 	$scope.remove = function(jurusan) {
-		angularPopupBoxes.confirm('Apakah Anda Yakin Akan Menghapus Jurusan Ini?').result.then(function() {
+		angularPopupBoxes.confirm('Apakah Anda Yakin Akan Menghapus Jurusan Ini?\n'+ jurusan.kode +'\n'+jurusan.keterangan).result.then(function() {
 			jurusan.remove().then(function() {
 				$scope.search();
 				alert("Data Berhasil di Hapus");

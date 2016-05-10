@@ -14,7 +14,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import tot6.news.News;
+import tot6.news.Category;
 
 @Path("/api/news")
 @Produces(MediaType.APPLICATION_JSON)
@@ -23,6 +27,10 @@ public interface NewsService {
 	@GET
 	@Path("/{id}")
 	News getNewsById(@PathParam("id") long id);
+	
+	@GET
+	@Path("/{id}")
+	News getNewsByTitle(@PathParam("title") @DefaultValue("") String title);
 	
 	@GET
 	List<News> findNewsByTitle(@QueryParam("title") @DefaultValue("") String title);
@@ -37,4 +45,22 @@ public interface NewsService {
 	@DELETE
 	@Path("/{id}")
 	void deleteNews(@PathParam("id") long id);
+	
+	@GET
+	@Path("/{id}/categorys")
+	Page<Category> findCategoryByNews(@PathParam("id") long id, Pageable pageable);
+
+	@PUT
+	@Path("/{id}/categorys/{categoryId}")
+	boolean addCategoryToNews(@PathParam("id") long id, @PathParam("categoryId") long categoryId);
+	
+	@DELETE
+	@Path("/{id}/categorys/{roleId}")
+	boolean removeCategoryFromNews(@PathParam("id") long id, @PathParam("categoryId") long categoryId);
+	
+	@DELETE
+	@Path("/{id}/categorys")
+	boolean removeAllCategoryFromNews(@PathParam("id") long id);
+
+	
 }

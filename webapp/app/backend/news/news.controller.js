@@ -16,6 +16,11 @@ angular.module('yamaApp').controller('NewsCtrl', function ($scope, $modal, $loca
 		News.getList($scope.searchParams).then(function(newss) {
 			$scope.newss = newss;
 			//$scope.page = newss.meta.number + 1;
+			angular.forEach(newss,function(news){
+				news.getList('categorys').then(function(categorys){
+					news.categorys=categorys;
+				});
+			});
 		});
 	};
 
@@ -61,7 +66,7 @@ angular.module('yamaApp').controller('NewsCtrl', function ($scope, $modal, $loca
 	
 	// Open popup confirmation and delete user if user choose yes
 	$scope.remove = function(news) {
-		angularPopupBoxes.confirm('Apakah Anda Yakin Akan Menghapus Berita Ini?').result.then(function() {
+		angularPopupBoxes.confirm('Apakah Anda Yakin Akan Menghapus Berita dengan Judul '+ news.title +' Ini?').result.then(function() {
 			news.remove().then(function() {
 				$scope.search();
 				alert("Data Berhasil di Hapus");
@@ -112,16 +117,16 @@ angular.module('yamaApp').controller('NewsCtrl', function ($scope, $modal, $loca
 			}
 		});
 	};
-}).controller('NewsEditCategoryFormCtrl', function($scope, $modalInstance, $cacheFactory, Categorys, news) {
+}).controller('NewsEditCategoryFormCtrl', function($scope, $modalInstance, $cacheFactory, Category, news) {
 	$scope.news = news;
-	$scope.category = [];
+	$scope.categorys = [];
 
 	var invalidateCache = function() {
 		$cacheFactory.get('$http').remove(news.one('categorys').getRequestedUrl());
 	};
 
-	$scope.loadCategorys = function(search) {
-		Categorys.getList({ q: search }).then(function(categorys) {
+	$scope.loadCategory = function(search) {
+		Category.getList({ q: search }).then(function(categorys) {
 			$scope.categorys = categorys;
 		});
 	};

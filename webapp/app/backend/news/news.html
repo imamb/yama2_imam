@@ -53,11 +53,11 @@
 										</td>
 										<td ng-bind="news.pembuat"></td>
 										<td>
-											<a href="" class="btn btn-info btn-xs" ng-click="openForm(news)">
+											<a href="" class="btn btn-info btn-xs" ng-click="openForm(news)" title="Edit Berita {{ news.title }}">
 												<span class="fa fa-edit"></span>
 											</a>
 
-											<a href="" class="btn btn-danger btn-xs" ng-click="remove(news)">
+											<a href="" class="btn btn-danger btn-xs" ng-click="remove(news)" title="Hapus Berita {{ news.title }}">
 												<span class="fa fa-trash"></span>
 											</a>
 
