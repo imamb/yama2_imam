@@ -10,7 +10,7 @@
 				<form ng-submit="searchParams.page=1;search();" class="pull-right col-md-6 col-xs-12">
 					<fieldset>
 						<div class="form-group col-md-10 col-xs-12">
-							<input type="text" class="form-control" ng-model="searchParams.nis" placeholder="Search..." autofocus>
+							<input type="text" class="form-control" ng-model="searchParams.nis" placeholder="Search..." autofocus ng-change="search(searchParams.nis)">
 						</div>
 						<button type="submit" value="Search" class="btn btn-default col-md-2 col-xs-12">
 							<span class="fa fa-search"></span>
@@ -120,10 +120,10 @@
 				<label class="control-label" for="agama">AGAMA</label>
 				<div class="controls">
 					<ui-select ng-model="siswa.agama"">
-						<ui-select-match placeholder="Pilih Agama...">{{ $item.name }}</ui-select-match>
+						<ui-select-match placeholder="Pilih Agama...">{{ $item.agama }}</ui-select-match>
 						<ui-select-choices repeat="agama in agamas" refresh="loadAgama($select.search)">
 							<div ng-bind-html="agama.agama | highlight: $select.search"></div>
-							<!-- <small ng-bind-html="role.description | highlight: $select.search"></small> -->
+							
 						</ui-select-choices>
 					</ui-select>
 				</div>
@@ -131,7 +131,20 @@
 			  </div>
 			</div>
 			<div class="row">
-			  <div class="col-md-6">
+			  <div class="col-md-4">
+			   <div class="form-group">
+				<label class="control-label" for="kelas">Kelas</label>
+				<div class="controls">
+					<ui-select ng-model="siswa.kelas"">
+						<ui-select-match placeholder="Pilih Kelas...">{{ $item.kelas }}</ui-select-match>
+						<ui-select-choices repeat="kelas in kelass" refresh="loadKelas($select.search)">
+							<div ng-bind-html="kelas.kelas | highlight: $select.search"></div>
+						</ui-select-choices>
+					</ui-select>
+				</div>
+			   </div>
+			  </div>
+			  <div class="col-md-4">
 				<div class="form-group">
 					<label class="control-label" for="nama">Tempat Lahir</label>
 					<div class="controls">
@@ -139,7 +152,7 @@
 					</div>
 			 	</div>
 			  </div>
-			  <div class="col-md-6">
+			  <div class="col-md-4">
 				<div class="form-group">
 					<label class="control-label" for="nama">Tanggal Lahir (DD MMMM YYYY : 09 Mei 2016)</label>
 					<div class="controls">

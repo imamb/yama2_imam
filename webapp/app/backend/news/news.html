@@ -133,8 +133,8 @@
 				<div class="controls">
 					<ui-select multiple ng-model="news.categorys" on-select="addCategory($item)" on-remove="removeCategory($item)">
 						<ui-select-match placeholder="Select Kategori...">{{ $item.kategori }}</ui-select-match>
-						<ui-select-choices repeat="category in categorys" refresh="loadCategorys($select.search)">
-							<div ng-bind-html="category.kategory | highlight: $select.search"></div>
+						<ui-select-choices repeat="category in categorys" refresh="loadCategory($select.search)">
+							<div ng-bind-html="category.kategori | highlight: $select.search"></div>
 							<small ng-bind-html="category.createDate | highlight: $select.search"></small>
 						</ui-select-choices>
 					</ui-select>

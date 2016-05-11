@@ -55,7 +55,7 @@ public interface NewsService {
 	boolean addCategoryToNews(@PathParam("id") long id, @PathParam("categoryId") long categoryId);
 	
 	@DELETE
-	@Path("/{id}/categorys/{roleId}")
+	@Path("/{id}/categorys/{categoryId}")
 	boolean removeCategoryFromNews(@PathParam("id") long id, @PathParam("categoryId") long categoryId);
 	
 	@DELETE

@@ -19,6 +19,7 @@ angular.module('yamaApp').controller('NewsCtrl', function ($scope, $modal, $loca
 			angular.forEach(newss,function(news){
 				news.getList('categorys').then(function(categorys){
 					news.categorys=categorys;
+					//console.log('List Kategori'+news.categorys);
 				});
 			});
 		});
@@ -123,17 +124,21 @@ angular.module('yamaApp').controller('NewsCtrl', function ($scope, $modal, $loca
 
 	var invalidateCache = function() {
 		$cacheFactory.get('$http').remove(news.one('categorys').getRequestedUrl());
+		console.log('link');
 	};
 
 	$scope.loadCategory = function(search) {
 		Category.getList({ q: search }).then(function(categorys) {
 			$scope.categorys = categorys;
+			//console.log('daftar');
 		});
+		//console.log('ambil kategori');
 	};
 
 	$scope.addCategory = function(category) {
 		news.one('categorys', category.id).put().then(function() {
 			invalidateCache();
+			//console.log('tambah');
 		});
 	};
 
@@ -144,6 +149,7 @@ angular.module('yamaApp').controller('NewsCtrl', function ($scope, $modal, $loca
 	};
 
 	$scope.done = $modalInstance.close;
+	//console.log('selesai');
 }).controller('testCtrl', ['$scope', function($scope){
 	  $scope.content = '';
 	  $scope.htmlContent = '<h2>Try me!</h2><p>textAngular is a super cool WYSIWYG Text Editor directive for AngularJS</p><p><b>Features:</b></p><ol><li>Automatic Seamless Two-Way-Binding</li><li style="color: blue;">Super Easy <b>Theming</b> Options</li><li>Simple Editor Instance Creation</li><li>Safely Parses Html for Custom Toolbar Icons</li><li>Doesn&apos;t Use an iFrame</li><li>Works with Firefox, Chrome, and IE8+</li></ol><p><b>Code at GitHub:</b> <a href="https://github.com/fraywing/textAngular">Here</a> </p>';

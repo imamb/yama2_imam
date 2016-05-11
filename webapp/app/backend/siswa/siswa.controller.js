@@ -16,6 +16,16 @@ angular.module('yamaApp').controller('SiswaCtrl', function ($scope, $modal, $loc
 		Siswa.getList($scope.searchParams).then(function(siswas) {
 			$scope.siswas = siswas;
 			//$scope.page = categorys.meta.number + 1;
+			angular.forEach(siswas,function(siswa){
+				siswa.getList('kelass').then(function(kelass){
+					siswa.kelas=kelass;
+					//console.log('List Kategori'+news.categorys);
+				});
+				siswa.getList('agamas').then(function(agamas){
+					siswa.agama=agamas;
+					//console.log('List Kategori'+news.categorys);
+				});
+			});
 		});
 	};
 
@@ -36,7 +46,7 @@ angular.module('yamaApp').controller('SiswaCtrl', function ($scope, $modal, $loc
 		});
 		
 		modal.result.then(function(n) {
-			$scope.searchParams.q = n.nama;
+			$scope.searchParams.q = n.nis;
 			$scope.search();
 		});
 	};
@@ -86,13 +96,22 @@ angular.module('yamaApp').controller('SiswaCtrl', function ($scope, $modal, $loc
 		});
 */
 
-}).controller('SiswaFormCtrl', function($scope, $modalInstance, $validation, Siswa, siswa) {
-	/* $scope.loadAgama = function(search) {
+}).controller('SiswaFormCtrl', function($scope, $modalInstance, $validation, Siswa, siswa,Agama, Kelas) {
+	$scope.agamas = [];
+	$scope.kelass = [];
+	
+	$scope.loadAgama = function(search) {
 		Agama.getList({ q: search }).then(function(agamas) {
 			$scope.agamas = agamas;
 		});
 	};
-	*/
+	
+	$scope.loadKelas = function(search) {
+		Kelas.getList({ q: search }).then(function(kelass) {
+			$scope.kelass = kelass;
+		});
+	};
+	
 	if (siswa) {
 		$scope.siswa = siswa;
 	}
