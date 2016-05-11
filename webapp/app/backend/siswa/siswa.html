@@ -46,8 +46,17 @@
 										<td ng-bind="siswa.nama"></td>
 										<td ng-bind="siswa.tplahir + ' ,' + siswa.tglahir"></td>
 										<td ng-bind="siswa.kelamin"></td>
-										<td ng-bind="siswa.agama"></td>
-										<td ng-bind="siswa.kelas"></td>
+										<td><span ng-repeat="a in siswa.agamas">
+											<span class="label label-default" ng-bind="a.agama"></span>&nbsp;
+											</span>
+										</td>
+										<td><span ng-repeat="k in siswa.kelass">
+											<span class="label label-default" ng-bind="k.kelas"></span>&nbsp;
+											</span>
+										</td>
+										<!--  <td ng-bind="siswa.agamas"></td>
+										<td ng-bind="siswa.kelass"></td>
+										-->
 										<td ng-bind="siswa.alamat.jln + ' ' + siswa.alamat.kel + ' ' + siswa.alamat.kec + ' ' + siswa.alamat.kota + ' ' + siswa.alamat.prop + ' ' + siswa.alamat.kodepos"></td>										
 										<td>
 											<a href="" class="btn btn-default btn-xs" ng-click="openOrtu(siswa)" title="Data Orang Tua {{ siswa.nama }}">
@@ -119,11 +128,10 @@
 			   <div class="form-group">
 				<label class="control-label" for="agama">AGAMA</label>
 				<div class="controls">
-					<ui-select ng-model="siswa.agama"">
+					<ui-select ng-model="siswa.agamas"">
 						<ui-select-match placeholder="Pilih Agama...">{{ $item.agama }}</ui-select-match>
 						<ui-select-choices repeat="agama in agamas" refresh="loadAgama($select.search)">
 							<div ng-bind-html="agama.agama | highlight: $select.search"></div>
-							
 						</ui-select-choices>
 					</ui-select>
 				</div>
@@ -135,7 +143,7 @@
 			   <div class="form-group">
 				<label class="control-label" for="kelas">Kelas</label>
 				<div class="controls">
-					<ui-select ng-model="siswa.kelas"">
+					<ui-select ng-model="siswa.kelass"">
 						<ui-select-match placeholder="Pilih Kelas...">{{ $item.kelas }}</ui-select-match>
 						<ui-select-choices repeat="kelas in kelass" refresh="loadKelas($select.search)">
 							<div ng-bind-html="kelas.kelas | highlight: $select.search"></div>
@@ -366,30 +374,3 @@
 		</div>
 	</form>
 </script>
-<!--  
-<script type="text/ng-template" id="user.role.html">
-	<div class="modal-header">
-		<h3 class="modal-title">Add role <small ng-bind="'(' + user.username + ')'"></small></h3>
-	</div>
-	<div class="modal-body">
-		<fieldset>
-			<div class="form-group">
-				<label class="control-label" for="roles">Roles</label>
-				<div class="controls">
-					<ui-select multiple ng-model="user.roles" on-select="addRole($item)" on-remove="removeRole($item)">
-						<ui-select-match placeholder="Select roles...">{{ $item.name }}</ui-select-match>
-						<ui-select-choices repeat="role in roles" refresh="loadRoles($select.search)">
-							<div ng-bind-html="role.name | highlight: $select.search"></div>
-							<small ng-bind-html="role.description | highlight: $select.search"></small>
-						</ui-select-choices>
-					</ui-select>
-				</div>
-			</div>
-		</fieldset>
-		<div class="modal-footer">
-			<a href="" class="btn btn-primary col-md-3 col-xs-12" ng-click="done()">Done</a>
-			<span class="label label-danger" ng-show="error">Ops something went wrong!</span>
-		</div>
-	</div>
-</script>
--->

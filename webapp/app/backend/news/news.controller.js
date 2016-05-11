@@ -124,7 +124,7 @@ angular.module('yamaApp').controller('NewsCtrl', function ($scope, $modal, $loca
 
 	var invalidateCache = function() {
 		$cacheFactory.get('$http').remove(news.one('categorys').getRequestedUrl());
-		console.log('link');
+		//console.log('link');
 	};
 
 	$scope.loadCategory = function(search) {

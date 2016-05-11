@@ -4,6 +4,10 @@ import javax.inject.Inject;
 import javax.ws.rs.BadRequestException;
 
 import org.meruvian.yama.core.LogInformation;
+import org.meruvian.yama.core.sekolah.Kelas;
+import org.meruvian.yama.core.sekolah.KelasRepository;
+import org.meruvian.yama.core.siswa.Agama;
+import org.meruvian.yama.core.siswa.AgamaRepository;
 import org.meruvian.yama.core.siswa.Siswa;
 import org.meruvian.yama.core.siswa.SiswaRepository;
 import org.springframework.data.domain.Page;
@@ -16,6 +20,22 @@ import org.springframework.transaction.annotation.Transactional;
 public class RestSiswaService implements SiswaService {
 	@Inject
 	private SiswaRepository siswaRepository;
+	
+	@Inject
+	private KelasRepository kelasRepository;
+	
+	@Inject
+	private AgamaRepository agamaRepository;
+	
+	@Override
+	public Page<Kelas> findSiswaByKelas(String kelas, Pageable pageable) {
+		return kelasRepository.findByKelas(kelas, pageable);
+	}
+	
+	@Override
+	public Page<Agama> findSiswaByAgama(String agama, Pageable pageable) {
+		return agamaRepository.findByAgama(agama, pageable);
+	}
 	
 	@Override
 	public Siswa getSiswaById(String id){

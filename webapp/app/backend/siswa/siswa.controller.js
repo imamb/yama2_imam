@@ -18,13 +18,15 @@ angular.module('yamaApp').controller('SiswaCtrl', function ($scope, $modal, $loc
 			//$scope.page = categorys.meta.number + 1;
 			angular.forEach(siswas,function(siswa){
 				siswa.getList('kelass').then(function(kelass){
-					siswa.kelas=kelass;
-					//console.log('List Kategori'+news.categorys);
+					siswa.kelass=kelass;
 				});
+				
+			});
+			angular.forEach(siswas,function(siswa){
 				siswa.getList('agamas').then(function(agamas){
-					siswa.agama=agamas;
-					//console.log('List Kategori'+news.categorys);
+					siswa.agamas=agamas;
 				});
+				//console.log('ambil agama dan kelas');
 			});
 		});
 	};
@@ -97,6 +99,11 @@ angular.module('yamaApp').controller('SiswaCtrl', function ($scope, $modal, $loc
 */
 
 }).controller('SiswaFormCtrl', function($scope, $modalInstance, $validation, Siswa, siswa,Agama, Kelas) {
+	
+	if (siswa) {
+		$scope.siswa = siswa;
+	}
+
 	$scope.agamas = [];
 	$scope.kelass = [];
 	
@@ -104,18 +111,16 @@ angular.module('yamaApp').controller('SiswaCtrl', function ($scope, $modal, $loc
 		Agama.getList({ q: search }).then(function(agamas) {
 			$scope.agamas = agamas;
 		});
+		console.log('ambil agama');
 	};
 	
 	$scope.loadKelas = function(search) {
 		Kelas.getList({ q: search }).then(function(kelass) {
 			$scope.kelass = kelass;
 		});
+		console.log('ambil Kelas');
 	};
 	
-	if (siswa) {
-		$scope.siswa = siswa;
-	}
-
 	var success = function(r) {
 		$modalInstance.close(r);
 	};

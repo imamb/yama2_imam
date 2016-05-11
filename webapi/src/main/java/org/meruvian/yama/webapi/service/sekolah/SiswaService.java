@@ -11,6 +11,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.meruvian.yama.core.sekolah.Kelas;
+import org.meruvian.yama.core.siswa.Agama;
 import org.meruvian.yama.core.siswa.Siswa;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,4 +38,14 @@ public interface SiswaService {
 	@PUT
 	@Path("/{id}")
 	Siswa updateSiswa(Siswa siswa);
+	
+	@GET
+	@Path("/{id}/kelass")
+	Page<Kelas> findSiswaByKelas(@QueryParam("q") @DefaultValue("") String kelas, 
+			Pageable pageable);
+	
+	@GET
+	@Path("/{id}/agamas")
+	Page<Agama> findSiswaByAgama(@QueryParam("q") @DefaultValue("") String agama, 
+			Pageable pageable);
 }

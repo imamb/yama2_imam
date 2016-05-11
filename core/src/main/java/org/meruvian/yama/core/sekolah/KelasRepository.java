@@ -8,7 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 public interface KelasRepository extends DefaultRepository<Kelas>{
 	Kelas findByKelas(String kelas);
 	
+	//@Query("SELECT k FROM Kelas k WHERE k.kelas LIKE %?1%")
+	Page<Kelas> findByKelas(String kelas, Pageable pageable);
+	
 	@Query("SELECT k FROM Kelas k WHERE k.kelas LIKE %?1% AND k.logInformation.activeFlag = ?2")
 	Page<Kelas> findByKelas(String kelas, int activeFlag, Pageable pageable);
-
 }
