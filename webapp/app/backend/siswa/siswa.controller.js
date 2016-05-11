@@ -99,13 +99,27 @@ angular.module('yamaApp').controller('SiswaCtrl', function ($scope, $modal, $loc
 */
 
 }).controller('SiswaFormCtrl', function($scope, $modalInstance, $validation, Siswa, siswa,Agama, Kelas) {
+	$scope.agamas = [];
+	$scope.kelass = [];
 	
 	if (siswa) {
 		$scope.siswa = siswa;
 	}
-
-	$scope.agamas = [];
-	$scope.kelass = [];
+	
+/*
+ *angular.forEach(siswas,function(siswa){
+				siswa.getList('kelass').then(function(kelass){
+					siswa.kelass=kelass;
+				});
+				
+			});
+			angular.forEach(siswas,function(siswa){
+				siswa.getList('agamas').then(function(agamas){
+					siswa.agamas=agamas;
+				});
+				//console.log('ambil agama dan kelas');
+			}); 
+ */
 	
 	$scope.loadAgama = function(search) {
 		Agama.getList({ q: search }).then(function(agamas) {

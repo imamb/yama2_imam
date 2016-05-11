@@ -32,6 +32,18 @@ public class RestSiswaService implements SiswaService {
 		return kelasRepository.findByKelas(kelas, pageable);
 	}
 	
+	/*
+	 *Page<UserRole> userRoles = userRoleRepository.findByUserId(u.getId(), pageable);
+	
+	List<Role> roles = new ArrayList<Role>();
+	for (UserRole ur : userRoles) {
+		roles.add(ur.getRole());
+	}
+	
+	return new PageImpl<Role>(roles, pageable, userRoles.getTotalElements()); 
+	 *
+	 */
+	
 	@Override
 	public Page<Agama> findSiswaByAgama(String agama, Pageable pageable) {
 		return agamaRepository.findByAgama(agama, pageable);
