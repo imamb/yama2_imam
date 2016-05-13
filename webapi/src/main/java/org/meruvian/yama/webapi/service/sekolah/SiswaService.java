@@ -41,11 +41,21 @@ public interface SiswaService {
 	
 	@GET
 	@Path("/{id}/kelass")
-	Page<Kelas> findSiswaByKelas(@QueryParam("q") @DefaultValue("") String kelas, 
+	Page<Kelas> findKelasBySiswa(@QueryParam("q") @DefaultValue("") String kelas, 
 			Pageable pageable);
 	
 	@GET
 	@Path("/{id}/agamas")
+	Page<Agama> findAgamaBySiswa(@QueryParam("q") @DefaultValue("") String agama, 
+			Pageable pageable);
+	
+	@GET
+	@Path("/{id}/kelas")
+	Page<Kelas> findSiswaByKelas(@QueryParam("q") @DefaultValue("") String kelas, 
+			Pageable pageable);
+	
+	@GET
+	@Path("/{id}/agama")
 	Page<Agama> findSiswaByAgama(@QueryParam("q") @DefaultValue("") String agama, 
 			Pageable pageable);
 }

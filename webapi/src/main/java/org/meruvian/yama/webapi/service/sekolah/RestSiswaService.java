@@ -50,6 +50,16 @@ public class RestSiswaService implements SiswaService {
 	}
 	
 	@Override
+	public Page<Agama> findAgamaBySiswa(String agama, Pageable pageable) {
+		return agamaRepository.findByAgama(agama, pageable);
+	}
+	
+	@Override
+	public Page<Kelas> findKelasBySiswa(String kelas, Pageable pageable) {
+		return kelasRepository.findByKelas(kelas, pageable);
+	}
+	
+	@Override
 	public Siswa getSiswaById(String id){
 		return siswaRepository.findById(id);
 	} 

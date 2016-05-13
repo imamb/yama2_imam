@@ -1,0 +1,123 @@
+<header header="DATA PENJUALAN" />
+<div class="row">
+	<div class="col-xs-12">
+		<div class="row">
+			<div class="col-xs-12">
+				<button class="btn btn-primary col-md-1 col-xs-12" ng-click="openForm()">
+					<span class="fa fa-plus"></span>
+				</button>
+
+				<form ng-submit="searchParams.page=1;search();" class="pull-right col-md-6 col-xs-12">
+					<fieldset>
+						<div class="form-group col-md-10 col-xs-12">
+							<input type="text" class="form-control" ng-model="searchParams.q" placeholder="Search..." autofocus ng-change="search(searchParams.q)">
+						</div>
+						<button type="submit" value="Search" class="btn btn-default col-md-2 col-xs-12">
+							<span class="fa fa-search"></span>
+						</button>
+					</fieldset>
+				</form>
+			</div>
+		</div>
+		<br>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="box">
+					<div class="box-header">
+					</div>
+					<div class="box-body">
+						<div class="table-responsive">
+							<table class="table">
+								<thead>
+									<tr>
+										<th>Nomor</th>
+										<th>Pembeli</th>
+										<th>Produk</th>
+										<th>Kasir</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="penjualan in penjualans">
+										<td><a href="" ng-click="openForm(penjualan)"><span ng-bind="penjualan.nomor"></a></span></td>
+										<td ng-bind="penjualan.pembeli"></td>
+										<td>
+										<a class="btn btn-xs btn-default" ng-click="addProduk(penjualan)">
+												<i class="glyphicon glyphicon-pencil" ng-show="penjualan.produks.length > 0"></i>
+												<i class="glyphicon glyphicon-plus" ng-show="penjualan.produks.length < 1"></i>
+											</a>
+											<span ng-repeat="r in penjualan.produks">
+											<span class="label label-default" ng-bind="r.nama"></span>&nbsp;
+											</span>
+										</td>
+										<td ng-bind="penjualan.kasir"></td>
+										<td>
+											<a href="" class="btn btn-info btn-xs" ng-click="openForm(penjualan)" title="Edit Penjualan {{ penjualan.nomor }}">
+												<span class="fa fa-edit"></span>
+											</a>
+											<a href="" class="btn btn-danger btn-xs" ng-click="remove(penjualan)" title="Hapus Penjualan {{ penjualan.nomor }}">
+												<span class="fa fa-trash"></span>
+											</a>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="box-footer">
+						<div class="row">
+							<div class="col-md-6">
+								<pagination total-items="penjualans.meta.totalElements" ng-model="page" items-per-page="penjualans.meta.size" ng-change="search(searchParams)"></pagination>
+							</div>
+							<div class="col-md-6">
+								<div class="pagination alert pull-right">Found <span ng-bind="penjualans.meta.totalElements"></span> entries</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div><!-- /.col -->
+</div>
+
+<script type="text/ng-template" id="penjualan.form.html">
+	<div class="modal-header">
+		<h3 class="modal-title">Tambah Penjualan</h3>
+	</div>
+	<form name="penjualanForm" ng-submit="submit(penjualan, penjualanForm)" novalidate validation-schema schema="penjualan" ng-init="penjualan.kasir =currentUser.username">
+		<div class="modal-body">
+			<fieldset>
+				<div class="form-group">
+					<label class="control-label" for="kode">Kode Penjualan</label>
+					<div class="controls">
+						<input type="text" id="nomor" name="nomor" class="form-control" ng-model="penjualan.nomor" required>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label" for="nama">Nama Pembeli</label>
+					<div class="controls">
+						<input type="text" id="pembeli" name="pembeli" class="form-control" ng-model="penjualan.pembeli" required>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label" for="stok">Kasir</label>
+					<div class="controls">
+						<input type="text" id="kasir" name="kasir" class="form-control" ng-model="penjualan.kasir" readonly>
+					</div>
+				</div>
+<!--
+				<div class="form-group">
+					<label class="control-label" for="harga">Harga Produk</label>
+					<div class="controls">
+						<input type="text" id="harga" name="harga" class="form-control" ng-model="penjualan.harga" required>
+					</div>
+				</div>
+-->
+			</fieldset>
+		</div>
+		<div class="modal-footer">
+			<input type="submit" value="Save" class="btn btn-primary col-md-3 col-xs-12">
+			<span class="label label-danger" ng-show="error">Ops something went wrong!</span>
+		</div>
+	</form>
+</script>
