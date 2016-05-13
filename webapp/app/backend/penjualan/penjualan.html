@@ -72,6 +72,7 @@
 													<th>Nama</th>
 													<th>Jumlah</th>
 													<th>Harga</th>
+													<!-- <th>Total</th> -->
 												</tr>
 											</thead>
 											<tbody>
@@ -109,7 +110,7 @@
 	<div class="modal-header">
 		<h3 class="modal-title">Tambah Penjualan</h3>
 	</div>
-	<form name="penjualanForm" ng-submit="submit(penjualan, penjualanForm)" novalidate validation-schema schema="penjualan" ng-init="penjualan.kasir =currentUser.username">
+	<form name="penjualanForm" ng-submit="submit(penjualan, penjualanForm)" novalidate validation-schema schema="penjualan" ng-init="penjualan.kasir =currentUser.name.first + ' ' + currentUser.name.last">
 		<div class="modal-body">
 			<fieldset>
 				<div class="form-group">

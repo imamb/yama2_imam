@@ -26,7 +26,7 @@ public class Penjualan extends DefaultPersistence{
 	private String pembeli;
 	private String kasir;
 	private List<DetailJual> produks=new ArrayList<DetailJual>();
-	//private String total;
+	private long total;
 	
 	@NotNull
 	@Column(name = "nomor", unique = true, nullable = false)
@@ -54,6 +54,15 @@ public class Penjualan extends DefaultPersistence{
 	
 	public void setKasir(String kasir) {
 		this.kasir = kasir;
+	}
+	
+	@Column(name="total")
+	public long getTotal() {
+		return total;
+	}
+	
+	public void setTotal(long total) {
+		this.total = total;
 	}
 	
 	@JsonIgnore

@@ -11,6 +11,7 @@ import org.meruvian.yama.core.pos.DetailBeliRepository;
 import org.meruvian.yama.core.pos.Pembelian;
 import org.meruvian.yama.core.pos.PembelianRepository;
 import org.meruvian.yama.core.pos.Produk;
+import org.meruvian.yama.core.pos.ProdukRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,9 @@ public class RestPembelianService implements PembelianService{
 	
 	@Inject
 	private DetailBeliRepository detailbeliRepository;
+	
+	@Inject
+	private ProdukRepository produkRepository;
 	
 	@Override
 	public Pembelian getPembelianById(String id){
@@ -60,6 +64,8 @@ public class RestPembelianService implements PembelianService{
 	@Transactional
 	public boolean addProdukToPembelian(String id, String produkId) {
 		Pembelian p=getPembelianById(id);
+		Produk pp=produkRepository.findById(produkId);
+		
 		for(DetailBeli dt:p.getProduks()){
 			if(dt.getProduk().getId()==produkId){
 				return false;
@@ -71,8 +77,13 @@ public class RestPembelianService implements PembelianService{
 		Produk pr=new Produk();
 		pr.setId(produkId);
 		dt.setProduk(pr);
+		dt.setJumlah(1);
+		dt.setHarga(pr.getHarga());
+		
+		p.setTotal(p.getTotal()-(dt.getHarga()*dt.getJumlah()));
 		
 		detailbeliRepository.save(dt);
+		pp.setStok(pp.getStok()+1);
 		return true;
 	}
 	
@@ -81,6 +92,9 @@ public class RestPembelianService implements PembelianService{
 	public boolean removeProdukFromPembelian(String id, String produkId) {
 		Pembelian p=getPembelianById(id);
 		DetailBeli dt=detailbeliRepository.findByProdukIdAndPembelianId(produkId, p.getId());
+		Produk pp=produkRepository.findById(produkId);
+		pp.setStok(pp.getStok()-dt.getJumlah());
+		p.setTotal(p.getTotal()-(dt.getHarga()*dt.getJumlah()));
 		detailbeliRepository.delete(dt);
 		return true;
 	}
@@ -89,6 +103,11 @@ public class RestPembelianService implements PembelianService{
 	@Transactional
 	public boolean removeAllProdukFromPembelian(String id) {
 		Pembelian p=getPembelianById(id);
+		for(DetailBeli dt:p.getProduks()){
+			Produk pp=produkRepository.findById(dt.getProduk().getId());
+			pp.setStok(pp.getStok()-dt.getJumlah());
+		}
+		p.setTotal(0);
 		detailbeliRepository.delete(p.getProduks());
 		return true;
 	}

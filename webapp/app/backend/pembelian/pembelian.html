@@ -35,6 +35,7 @@
 										<th>Surat Jalan</th>
 										<th>Produk</th>
 										<th>Kasir</th>
+										<th>Total Transaksi</th>
 										<th>Action</th>
 									</tr>
 								</thead>
@@ -55,6 +56,7 @@
 											 -->
 										</td>
 										<td ng-bind="pembelian.kasir"></td>
+										<td ng-bind="pembelian.total"></td>
 										<td>
 											<a href="" class="btn btn-info btn-xs" ng-click="openForm(pembelian)" title="Edit Pembelian {{ pembelian.nomor }}">
 												<span class="fa fa-edit"></span>
@@ -111,7 +113,7 @@
 	<div class="modal-header">
 		<h3 class="modal-title">Tambah Pembelian</h3>
 	</div>
-	<form name="pembelianForm" ng-submit="submit(pembelian, pembelianForm)" novalidate validation-schema schema="pembelian" ng-init="pembelian.kasir =currentUser.username">
+	<form name="pembelianForm" ng-submit="submit(pembelian, pembelianForm)" novalidate validation-schema schema="pembelian" ng-init="pembelian.kasir =currentUser.name.first + ' ' + currentUser.name.last">
 		<div class="modal-body">
 			<fieldset>
 				<div class="form-group">

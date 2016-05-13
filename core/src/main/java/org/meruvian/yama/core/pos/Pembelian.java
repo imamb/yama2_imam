@@ -27,7 +27,7 @@ public class Pembelian extends DefaultPersistence{
 	private String penjual;
 	private String kasir;
 	private List<DetailBeli> produks=new ArrayList<DetailBeli>();
-	//private String total;
+	private long total;
 	
 	@NotNull
 	@Column(name = "nomor", unique = true, nullable = false)
@@ -64,6 +64,15 @@ public class Pembelian extends DefaultPersistence{
 	
 	public void setSurat(String surat) {
 		this.surat = surat;
+	}
+	
+	@Column(name="total")
+	public long getTotal() {
+		return total;
+	}
+	
+	public void setTotal(long total) {
+		this.total = total;
 	}
 	
 	@JsonIgnore
