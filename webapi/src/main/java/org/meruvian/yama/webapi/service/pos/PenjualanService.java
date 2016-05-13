@@ -36,7 +36,11 @@ public interface PenjualanService {
 	@PUT
 	@Path("/{id}")
 	Penjualan updatePenjualan(Penjualan penjualan);
-	
+	/*
+	@PUT
+	@Path("/{id}")
+	Produk updateProduk(Produk produk);
+	*/
 	@GET
 	@Path("/{id}/produks")
 	Page<Produk> findProdukByPenjualan(@PathParam("id") String id, Pageable pageable);

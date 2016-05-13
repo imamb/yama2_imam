@@ -11,6 +11,7 @@ import org.meruvian.yama.core.pos.DetailJualRepository;
 import org.meruvian.yama.core.pos.Penjualan;
 import org.meruvian.yama.core.pos.PenjualanRepository;
 import org.meruvian.yama.core.pos.Produk;
+import org.meruvian.yama.core.pos.ProdukRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +26,9 @@ public class RestPenjualanService implements PenjualanService {
 	
 	@Inject
 	private DetailJualRepository detailjualRepository;
+	
+	@Inject
+	private ProdukRepository produkRepository;
 	
 	@Override
 	public Penjualan getPenjualanById(String id){
@@ -57,6 +61,15 @@ public class RestPenjualanService implements PenjualanService {
 		p.setPembeli(penjualan.getPembeli());
 		return p;
 	}
+	/*
+	@Override
+	@Transactional
+	public Produk updateProduk(Produk produk){
+		Produk p=produkRepository.findById(produk.getId());
+		p.setStok(p.getStok()-1);
+		return p;
+	}
+	*/
 	
 	@Override
 	@Transactional
@@ -72,8 +85,13 @@ public class RestPenjualanService implements PenjualanService {
 		Produk pr=new Produk();
 		pr.setId(produkId);
 		dt.setProduk(pr);
+		dt.setHarga(pr.getHarga());
+		dt.setJumlah(1);
+				
 		
 		detailjualRepository.save(dt);
+		Produk pp=produkRepository.findById(produkId);
+		pp.setStok(pp.getStok()-1);
 		return true;
 	}
 	
@@ -83,6 +101,8 @@ public class RestPenjualanService implements PenjualanService {
 		Penjualan p=getPenjualanById(id);
 		DetailJual dj=detailjualRepository.findByProdukIdAndPenjualanId(produkId, p.getId());
 		detailjualRepository.delete(dj);
+		Produk pp=produkRepository.findById(produkId);
+		pp.setStok(pp.getStok()+1);
 		return true;	
 	}
 	
@@ -90,6 +110,10 @@ public class RestPenjualanService implements PenjualanService {
 	@Transactional
 	public boolean removeAllProdukFromPenjualan(String id) {
 		Penjualan p=getPenjualanById(id);
+		for(DetailJual dj: p.getProduks()){
+			Produk pp=produkRepository.findById(dj.getProduk().getId());
+			pp.setStok(pp.getStok()+1);
+		}
 		detailjualRepository.delete(p.getProduks());
 		return true;
 	}
