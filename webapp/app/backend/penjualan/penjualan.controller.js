@@ -45,6 +45,23 @@ angular.module('yamaApp').controller('PenjualanCtrl', function ($scope, $modal, 
 			$scope.search();
 		});
 	};
+	
+	$scope.addProduk = function(penjualan) {
+		var modal = $modal.open({
+			templateUrl: 'penjualan.produk.html',
+			controller: 'PenjualanProdukFormCtrl',
+			size: 'lg',
+			resolve: {
+				penjualan: function() {
+					return penjualan;
+				}
+			}
+		});
+
+		modal.result.then(function() {
+			$scope.search($scope.searchParams);
+		});
+	};
 
 	// Open popup confirmation and delete user if user choose yes
 	$scope.remove = function(penjualan) {
@@ -78,4 +95,32 @@ angular.module('yamaApp').controller('PenjualanCtrl', function ($scope, $modal, 
 			}
 		});
 	};
+}).controller('PenjualanProdukFormCtrl', function($scope, $modalInstance, $cacheFactory, Produk, penjualan) {
+	$scope.penjualan = penjualan;
+	$scope.produks = [];
+
+	var invalidateCache = function() {
+		$cacheFactory.get('$http').remove(penjualan.one('produks').getRequestedUrl());
+	};
+
+	$scope.loadProduk = function(search) {
+		Produk.getList({ q: search }).then(function(produks) {
+			$scope.produks = produks;
+		});
+	};
+
+	$scope.addProduk = function(produk) {
+		penjualan.one('produks', produk.id).put().then(function() {
+			invalidateCache();
+		});
+	};
+
+	$scope.removeProduk = function(produk) {
+		penjualan.one('produks', produk.id).remove().then(function() {
+			invalidateCache();
+		});
+	};
+
+	$scope.done = $modalInstance.close;
+	//console.log('selesai');
 });

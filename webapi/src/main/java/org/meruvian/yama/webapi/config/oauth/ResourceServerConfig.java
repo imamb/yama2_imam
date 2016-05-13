@@ -80,7 +80,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 				.antMatchers("/api/agama","/api/agama/**").fullyAuthenticated()
 				.antMatchers("/api/produk","/api/produk/**").fullyAuthenticated()
 				.antMatchers("/api/penjualan","/api/penjualan/**").fullyAuthenticated()
-				.antMatchers("/api/pembelian","/api/pembelian/**").fullyAuthenticated()
+				.antMatchers("/api/pembelian","/api/pembelian/**").permitAll()
 				.antMatchers("/api/signup").anonymous()
 				//.antMatchers("/**").permitAll()
 				.antMatchers("/**").fullyAuthenticated()

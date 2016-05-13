@@ -121,3 +121,36 @@
 		</div>
 	</form>
 </script>
+
+<script type="text/ng-template" id="penjualan.produk.html">
+	<div class="modal-header">
+		<h3 class="modal-title">Tambah Penjualan Produk <small ng-bind="'(' + penjualan.nomor + ' ' + penjualan.pembeli + ')'"></small></h3>
+	</div>
+	<div class="modal-body">
+		<fieldset>
+			<div class="form-group">
+				<label class="control-label" for="produks">Produk</label>
+				<div class="controls">
+					<ui-select multiple ng-model="penjualan.produks" on-select="addProduk($item)" on-remove="removeProduk($item)">
+						<ui-select-match placeholder="Select Produk...">{{ $item.nama }}</ui-select-match>
+						<ui-select-choices repeat="produk in produks" refresh="loadProduk($select.search)">
+							<div ng-bind-html="produk.nama | highlight: $select.search"></div>
+							<small >
+								Stok : {{produk.stok}}
+								Harga : {{produk.harga}}
+								Keterangan : <span ng-bind-html="produk.keterangan | highlight: $select.search"> 
+								
+							</small>
+							<!-- <small ng-bind-html=" | highlight: $select.search"></small>
+							<small ng-bind-html=" | highlight: $select.search"></small> -->
+						</ui-select-choices>
+					</ui-select>
+				</div>
+			</div>
+		</fieldset>
+		<div class="modal-footer">
+			<a href="" class="btn btn-primary col-md-3 col-xs-12" ng-click="done()">Done</a>
+			<span class="label label-danger" ng-show="error">Ops something went wrong!</span>
+		</div>
+	</div>
+</script>
