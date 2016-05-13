@@ -30,7 +30,7 @@
 							<table class="table">
 								<thead>
 									<tr>
-										<th>Nomor</th>
+										<th>Nomor Transaksi</th>
 										<th>Penjual</th>
 										<th>Surat Jalan</th>
 										<th>Produk</th>
@@ -38,8 +38,8 @@
 										<th>Action</th>
 									</tr>
 								</thead>
-								<tbody>
-									<tr ng-repeat="pembelian in pembelians">
+								<tbody ng-repeat="pembelian in pembelians">
+									<tr>
 										<td><a href="" ng-click="openForm(pembelian)"><span ng-bind="pembelian.nomor"></a></span></td>
 										<td ng-bind="pembelian.penjual"></td>
 										<td ng-bind="pembelian.surat"></td>
@@ -48,9 +48,11 @@
 												<i class="glyphicon glyphicon-pencil" ng-show="pembelian.produks.length > 0"></i>
 												<i class="glyphicon glyphicon-plus" ng-show="pembelian.produks.length < 1"></i>
 											</a>
+											<!-- 
 											<span ng-repeat="r in pembelian.produks">
 											<span class="label label-default" ng-bind="r.nama"></span>&nbsp;
 											</span>
+											 -->
 										</td>
 										<td ng-bind="pembelian.kasir"></td>
 										<td>
@@ -61,6 +63,29 @@
 												<span class="fa fa-trash"></span>
 											</a>
 										</td>
+									</tr>
+									<tr>
+										<td colspan='5'>
+											<table class="table">
+											<caption>Detail Pembelian dengan Nomor Transaksi {{pembelian.nomor}} {{pembelian.penjual}}</caption>
+												<thead>
+												<tr>
+													<th>KodeProduk</th>
+													<th>Nama</th>
+													<th>Jumlah</th>
+													<th>Harga</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr ng-repeat="r in pembelian.produks">
+													<td ng-bind="r.kode"></td>
+													<td ng-bind="r.nama"></td>
+													<td>1</td>
+													<td ng-bind="r.harga"></td>
+												</tr>
+											</tbody>
+											</table>
+										<td>
 									</tr>
 								</tbody>
 							</table>
