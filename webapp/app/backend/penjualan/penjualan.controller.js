@@ -1,5 +1,6 @@
 'use strict';
 
+//angular.module('yamaApp').controller('PenjualanCtrl', function ($scope, $modal, $location, Penjualan, angularPopupBoxes,$cacheFactory, Produk) {
 angular.module('yamaApp').controller('PenjualanCtrl', function ($scope, $modal, $location, Penjualan, angularPopupBoxes) {
 	$scope.searchParams = $location.search();
 	$scope.searchParams.hash = 0;
@@ -24,6 +25,19 @@ angular.module('yamaApp').controller('PenjualanCtrl', function ($scope, $modal, 
 			});
 		});
 	};
+
+
+//
+//	$scope.TotalTransaksi=function(penjualan){
+//	      var summ=0;
+//	      foreach( i : penjualan.produks)
+//	      {
+//	        summ=summ+Number(i.harga);
+//	      }
+//	      return summ;
+//	    };
+
+
 
 	$scope.search();
 
@@ -63,6 +77,16 @@ angular.module('yamaApp').controller('PenjualanCtrl', function ($scope, $modal, 
 		});
 	};
 
+//	var invalidateCache = function() {
+//		$cacheFactory.get('$http').remove(penjualan.one('produks').getRequestedUrl());
+//	};
+//	
+//	$scope.removeProduk = function(produk) {
+//		penjualan.one('produks', produk.id).remove().then(function() {
+//			invalidateCache();
+//		});
+//	};
+//	
 	// Open popup confirmation and delete user if user choose yes
 	$scope.remove = function(penjualan) {
 		angularPopupBoxes.confirm('Apakah Anda Yakin Akan Menghapus Data Penjualan Ini?\n'+ penjualan.nomor +'\n'+ penjualan.pembeli).result.then(function() {

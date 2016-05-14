@@ -76,11 +76,12 @@ public class RestPenjualanService implements PenjualanService {
 	public boolean addProdukToPenjualan(String id, String produkId) {
 		Penjualan p=getPenjualanById(id);
 		Produk pp=produkRepository.findById(produkId);
+		Penjualan pj=penjualanRepository.findById(id);
 		
 		if(pp.getStok()==0){return false;}
 		for(DetailJual dj: p.getProduks()){
 			if(dj.getProduk().getId()==produkId){
-				//p.setTotal(p.getTotal()+dj.getProduk().getHarga());
+				//pj.setTotal(pj.getTotal()+dj.getProduk().getHarga());
 				//dj.setJumlah(dj.getJumlah()+1);
 				return false;
 			}
@@ -92,7 +93,7 @@ public class RestPenjualanService implements PenjualanService {
 		dt.setProduk(pr);
 		dt.setHarga(pr.getHarga());
 		dt.setJumlah(1);
-				
+		pj.setTotal(pj.getTotal()+(dt.getHarga()*dt.getJumlah()));		
 		
 		detailjualRepository.save(dt);
 		pp.setStok(pp.getStok()-1);
@@ -103,8 +104,9 @@ public class RestPenjualanService implements PenjualanService {
 	@Transactional
 	public boolean removeProdukFromPenjualan(String id, String produkId) {
 		Penjualan p=getPenjualanById(id);
+		Penjualan pj=penjualanRepository.findById(id);
 		DetailJual dj=detailjualRepository.findByProdukIdAndPenjualanId(produkId, p.getId());
-		p.setTotal(p.getTotal()-(dj.getHarga()*dj.getJumlah()));
+		pj.setTotal(pj.getTotal()-(dj.getHarga()*dj.getJumlah()));
 		
 		Produk pp=produkRepository.findById(produkId);
 		pp.setStok(pp.getStok()+dj.getJumlah());
@@ -117,11 +119,12 @@ public class RestPenjualanService implements PenjualanService {
 	@Transactional
 	public boolean removeAllProdukFromPenjualan(String id) {
 		Penjualan p=getPenjualanById(id);
+		Penjualan pj=penjualanRepository.findById(id);
 		for(DetailJual dj: p.getProduks()){
 			Produk pp=produkRepository.findById(dj.getProduk().getId());
 			pp.setStok(pp.getStok()+dj.getJumlah());
 		}
-		p.setTotal(0);
+		pj.setTotal(0);
 		detailjualRepository.delete(p.getProduks());
 		return true;
 	}

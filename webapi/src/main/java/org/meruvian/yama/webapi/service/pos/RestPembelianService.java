@@ -64,6 +64,7 @@ public class RestPembelianService implements PembelianService{
 	@Transactional
 	public boolean addProdukToPembelian(String id, String produkId) {
 		Pembelian p=getPembelianById(id);
+		Pembelian pb=pembelianRepository.findById(id);
 		Produk pp=produkRepository.findById(produkId);
 		
 		for(DetailBeli dt:p.getProduks()){
@@ -80,7 +81,7 @@ public class RestPembelianService implements PembelianService{
 		dt.setJumlah(1);
 		dt.setHarga(pr.getHarga());
 		
-		p.setTotal(p.getTotal()-(dt.getHarga()*dt.getJumlah()));
+		pb.setTotal(pb.getTotal()-(dt.getHarga()*dt.getJumlah()));
 		
 		detailbeliRepository.save(dt);
 		pp.setStok(pp.getStok()+1);
@@ -91,10 +92,11 @@ public class RestPembelianService implements PembelianService{
 	@Transactional
 	public boolean removeProdukFromPembelian(String id, String produkId) {
 		Pembelian p=getPembelianById(id);
+		Pembelian pb=pembelianRepository.findById(id);
 		DetailBeli dt=detailbeliRepository.findByProdukIdAndPembelianId(produkId, p.getId());
 		Produk pp=produkRepository.findById(produkId);
 		pp.setStok(pp.getStok()-dt.getJumlah());
-		p.setTotal(p.getTotal()-(dt.getHarga()*dt.getJumlah()));
+		pb.setTotal(pb.getTotal()-(dt.getHarga()*dt.getJumlah()));
 		detailbeliRepository.delete(dt);
 		return true;
 	}
@@ -103,11 +105,12 @@ public class RestPembelianService implements PembelianService{
 	@Transactional
 	public boolean removeAllProdukFromPembelian(String id) {
 		Pembelian p=getPembelianById(id);
+		Pembelian pb=pembelianRepository.findById(id);
 		for(DetailBeli dt:p.getProduks()){
 			Produk pp=produkRepository.findById(dt.getProduk().getId());
 			pp.setStok(pp.getStok()-dt.getJumlah());
 		}
-		p.setTotal(0);
+		pb.setTotal(0);
 		detailbeliRepository.delete(p.getProduks());
 		return true;
 	}

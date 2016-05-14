@@ -27,7 +27,7 @@
 					</div>
 					<div class="box-body">
 						<div class="table-responsive">
-							<table class="table">
+							<table class="table" ng-repeat="pembelian in pembelians">
 								<thead>
 									<tr>
 										<th>Nomor Transaksi</th>
@@ -35,11 +35,11 @@
 										<th>Surat Jalan</th>
 										<th>Produk</th>
 										<th>Kasir</th>
-										<th>Total Transaksi</th>
+										<!-- <th>Total Transaksi</th> -->
 										<th>Action</th>
 									</tr>
 								</thead>
-								<tbody ng-repeat="pembelian in pembelians">
+								<tbody>
 									<tr>
 										<td><a href="" ng-click="openForm(pembelian)"><span ng-bind="pembelian.nomor"></a></span></td>
 										<td ng-bind="pembelian.penjual"></td>
@@ -56,7 +56,7 @@
 											 -->
 										</td>
 										<td ng-bind="pembelian.kasir"></td>
-										<td ng-bind="pembelian.total"></td>
+										<!-- <td ng-bind="pembelian.total"></td> -->
 										<td>
 											<a href="" class="btn btn-info btn-xs" ng-click="openForm(pembelian)" title="Edit Pembelian {{ pembelian.nomor }}">
 												<span class="fa fa-edit"></span>
@@ -68,7 +68,7 @@
 									</tr>
 									<tr>
 										<td colspan='5'>
-											<table class="table">
+											<table class="table" ng-init="pembelians.total = {}">
 											<caption>Detail Pembelian dengan Nomor Transaksi {{pembelian.nomor}} {{pembelian.penjual}}</caption>
 												<thead>
 												<tr>
@@ -76,6 +76,7 @@
 													<th>Nama</th>
 													<th>Jumlah</th>
 													<th>Harga</th>
+													<!-- <th>Total</th> -->
 												</tr>
 											</thead>
 											<tbody>
@@ -83,7 +84,12 @@
 													<td ng-bind="r.kode"></td>
 													<td ng-bind="r.nama"></td>
 													<td>1</td>
-													<td ng-bind="r.harga"></td>
+													<td>{{r.harga| currency:"Rp. "}}</td>
+													<td ng-init="pembelians.total.harga =pembelians.total.harga + r.harga">{{r.harga| currency:"Rp. "}}</td>
+												</tr>
+												<tr class="info">
+													<td colspan="4" class="text-right"><span class="control-label">Total Transaksi</span></td>
+													<td class="info control-label">{{pembelians.total.harga | currency:"Rp. "}}</td>
 												</tr>
 											</tbody>
 											</table>

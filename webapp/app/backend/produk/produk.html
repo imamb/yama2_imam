@@ -44,7 +44,7 @@
 										<td><a href="" ng-click="openForm(produk)"><span ng-bind="produk.nama"></a></span></td>
 										<td ng-bind="produk.keterangan"></td>
 										<td ng-bind="produk.stok"></td>
-										<td ng-bind="produk.harga"></td>
+										<td>{{produk.harga| currency:"Rp. "}}</td>
 										<td>
 											<a href="" class="btn btn-info btn-xs" ng-click="openForm(produk)" title="Edit Produk {{ produk.nama }}">
 												<span class="fa fa-edit"></span>

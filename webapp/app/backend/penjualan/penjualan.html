@@ -27,17 +27,18 @@
 					</div>
 					<div class="box-body">
 						<div class="table-responsive">
-							<table class="table">
+							<table class="table" ng-repeat="penjualan in penjualans">
 								<thead>
 									<tr>
 										<th>Nomor Transaksi</th>
 										<th>Pembeli</th>
 										<th>Produk</th>
 										<th>Kasir</th>
+										<!-- <th>Total Transaksi</th>  -->
 										<th>Action</th>
 									</tr>
 								</thead>
-								<tbody ng-repeat="penjualan in penjualans">
+								<tbody >
 									<tr>
 										<td><a href="" ng-click="openForm(penjualan)"><span ng-bind="penjualan.nomor"></a></span></td>
 										<td ng-bind="penjualan.pembeli"></td>
@@ -52,6 +53,7 @@
 											-->
 										</td>
 										<td ng-bind="penjualan.kasir"></td>
+										<!-- <td ng-bind="penjualan.total"></td>  -->
 										<td>
 											<a href="" class="btn btn-info btn-xs" ng-click="openForm(penjualan)" title="Edit Penjualan {{ penjualan.nomor }}">
 												<span class="fa fa-edit"></span>
@@ -72,7 +74,7 @@
 													<th>Nama</th>
 													<th>Jumlah</th>
 													<th>Harga</th>
-													<!-- <th>Total</th> -->
+													<th>Total</th>
 												</tr>
 											</thead>
 											<tbody>
@@ -80,11 +82,16 @@
 													<td ng-bind="r.kode"></td>
 													<td ng-bind="r.nama"></td>
 													<td>1</td>
-													<td ng-bind="r.harga"></td>
+													<td>{{r.harga| currency:"Rp. "}}</td>
+													<td ng-init="penjualans.total = penjualans.total + r.harga">{{r.harga| currency:"Rp. "}}</td>
+												</tr>
+												<tr class="info">
+													<td colspan="4" class="text-right"><span class="control-label">Total Transaksi</span></td>
+													<td class="info control-label">{{penjualans.total | currency:"Rp. "}}  {{TotalTransaksi(penjualan)}}</td>
 												</tr>
 											</tbody>
 											</table>
-										<td>
+										</td>
 									</tr>
 								</tbody>
 							</table>
