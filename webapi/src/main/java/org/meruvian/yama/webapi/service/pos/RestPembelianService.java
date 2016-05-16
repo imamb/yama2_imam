@@ -15,9 +15,12 @@ import org.meruvian.yama.core.pos.ProdukRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-public class RestPembelianService implements PembelianService{
+@Service
+@Transactional(readOnly = true)
+public class RestPembelianService implements PembelianService {
 	@Inject
 	private PembelianRepository pembelianRepository;
 	
@@ -34,7 +37,7 @@ public class RestPembelianService implements PembelianService{
 	
 	@Override
 	public Page<Pembelian> findPembelianByNomor(String nomor,Pageable pageable){
-		return pembelianRepository.findByNomor(nomor, nomor, nomor, LogInformation.ACTIVE, pageable);
+		return pembelianRepository.findByNomor(nomor,nomor, nomor, LogInformation.ACTIVE, pageable);
 	}
 	
 	@Override
@@ -59,32 +62,43 @@ public class RestPembelianService implements PembelianService{
 		p.setSurat(pembelian.getSurat());
 		return p;
 	}
+	/*
+	@Override
+	@Transactional
+	public Produk updateProduk(Produk produk){
+		Produk p=produkRepository.findById(produk.getId());
+		p.setStok(p.getStok()-1);
+		return p;
+	}
+	*/
 	
 	@Override
 	@Transactional
 	public boolean addProdukToPembelian(String id, String produkId) {
 		Pembelian p=getPembelianById(id);
-		Pembelian pb=pembelianRepository.findById(id);
 		Produk pp=produkRepository.findById(produkId);
+		Pembelian pj=pembelianRepository.findById(id);
 		
-		for(DetailBeli dt:p.getProduks()){
-			if(dt.getProduk().getId()==produkId){
+		if(pp.getStok()==0){return false;}
+		for(DetailBeli dj: p.getProduks()){
+			if(dj.getProduk().getId()==produkId){
+				//pj.setTotal(pj.getTotal()+dj.getProduk().getHarga());
+				//dj.setJumlah(dj.getJumlah()+1);
 				return false;
 			}
 		}
-		
 		DetailBeli dt=new DetailBeli();
 		dt.setPembelian(p);
 		Produk pr=new Produk();
 		pr.setId(produkId);
 		dt.setProduk(pr);
-		dt.setJumlah(1);
 		dt.setHarga(pr.getHarga());
-		
-		pb.setTotal(pb.getTotal()-(dt.getHarga()*dt.getJumlah()));
+		dt.setJumlah(1);
+		pj.setTotal(pj.getTotal()+(dt.getHarga()*dt.getJumlah()));	
+		pp.setStok(pp.getStok()+dt.getJumlah());
 		
 		detailbeliRepository.save(dt);
-		pp.setStok(pp.getStok()+1);
+		
 		return true;
 	}
 	
@@ -92,25 +106,27 @@ public class RestPembelianService implements PembelianService{
 	@Transactional
 	public boolean removeProdukFromPembelian(String id, String produkId) {
 		Pembelian p=getPembelianById(id);
-		Pembelian pb=pembelianRepository.findById(id);
-		DetailBeli dt=detailbeliRepository.findByProdukIdAndPembelianId(produkId, p.getId());
+		Pembelian pj=pembelianRepository.findById(id);
+		DetailBeli dj=detailbeliRepository.findByProdukIdAndPembelianId(produkId, p.getId());
+		pj.setTotal(pj.getTotal()-(dj.getHarga()*dj.getJumlah()));
+		
 		Produk pp=produkRepository.findById(produkId);
-		pp.setStok(pp.getStok()-dt.getJumlah());
-		pb.setTotal(pb.getTotal()-(dt.getHarga()*dt.getJumlah()));
-		detailbeliRepository.delete(dt);
-		return true;
+		pp.setStok(pp.getStok()-dj.getJumlah());
+		
+		detailbeliRepository.delete(dj);
+		return true;	
 	}
 	
 	@Override
 	@Transactional
 	public boolean removeAllProdukFromPembelian(String id) {
 		Pembelian p=getPembelianById(id);
-		Pembelian pb=pembelianRepository.findById(id);
-		for(DetailBeli dt:p.getProduks()){
-			Produk pp=produkRepository.findById(dt.getProduk().getId());
-			pp.setStok(pp.getStok()-dt.getJumlah());
+		Pembelian pj=pembelianRepository.findById(id);
+		for(DetailBeli dj: p.getProduks()){
+			Produk pp=produkRepository.findById(dj.getProduk().getId());
+			pp.setStok(pp.getStok()-dj.getJumlah());
 		}
-		pb.setTotal(0);
+		pj.setTotal(0);
 		detailbeliRepository.delete(p.getProduks());
 		return true;
 	}
@@ -121,9 +137,12 @@ public class RestPembelianService implements PembelianService{
 		Page<DetailBeli> detailBelis=detailbeliRepository.findByPembelianId(p.getId(), pageable);
 		
 		List<Produk> produks=new ArrayList<Produk>();
-		for(DetailBeli dt:detailBelis){
-			produks.add(dt.getProduk());
+		
+		for(DetailBeli dj:detailBelis){
+			produks.add(dj.getProduk());
 		}
+		
 		return new PageImpl<Produk>(produks,pageable,detailBelis.getTotalElements());
 	}
+
 }

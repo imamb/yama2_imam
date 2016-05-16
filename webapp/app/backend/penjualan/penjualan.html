@@ -75,19 +75,23 @@
 													<th>Jumlah</th>
 													<th>Harga</th>
 													<th>Total</th>
+													<th>Action</th>
 												</tr>
 											</thead>
 											<tbody>
-												<tr ng-repeat="r in penjualan.produks">
+												<tr ng-repeat="r in penjualan.produks"> <!--  | groupBy:'id' -->
 													<td ng-bind="r.kode"></td>
 													<td ng-bind="r.nama"></td>
 													<td>1</td>
 													<td>{{r.harga| currency:"Rp. "}}</td>
 													<td ng-init="penjualans.total = penjualans.total + r.harga">{{r.harga| currency:"Rp. "}}</td>
+													<td><a href="" class="btn btn-danger btn-xs" ng-click="removeProduk(penjualan,r)" title="Hapus Produk {{r.nama}}  dari Penjualan {{ penjualan.nomor }}">
+												<span class="fa fa-trash"></span>
+											</a></td>
 												</tr>
-												<tr class="info">
+												<tr class="info" ng-init="penjualans.total =0">
 													<td colspan="4" class="text-right"><span class="control-label">Total Transaksi</span></td>
-													<td class="info control-label">{{penjualans.total | currency:"Rp. "}}  {{TotalTransaksi(penjualan)}}</td>
+													<td class="info control-label">{{penjualans.total | currency:"Rp. "}}  <!-- {{TotalTransaksi}} --></td>
 												</tr>
 											</tbody>
 											</table>

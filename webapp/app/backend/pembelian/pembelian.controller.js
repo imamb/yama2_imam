@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('yamaApp').controller('PembelianCtrl', function ($scope, $modal, $location, Pembelian, angularPopupBoxes) {
+angular.module('yamaApp').controller('PembelianCtrl', function ($scope, $modal, $location, Pembelian, angularPopupBoxes,$cacheFactory, Produk) {
 	$scope.searchParams = $location.search();
 	$scope.searchParams.hash = 0;
 	$scope.page = 1;
@@ -45,10 +45,47 @@ angular.module('yamaApp').controller('PembelianCtrl', function ($scope, $modal, 
 			$scope.search();
 		});
 	};
+	
+	$scope.addProduk = function(pembelian) {
+		var modal = $modal.open({
+			templateUrl: 'pembelian.produk.html',
+			controller: 'PembelianProdukFormCtrl',
+			size: 'lg',
+			resolve: {
+				pembelian: function() {
+					return pembelian;
+				}
+			}
+		});
 
+		modal.result.then(function() {
+			$scope.search($scope.searchParams);
+		});
+	};
+
+	var invalidateCache = function(pembelian) {
+		$cacheFactory.get('$http').remove(pembelian.one('produks').getRequestedUrl());
+	};
+	
+	$scope.removeProduk = function(pembelian, produk) {
+		angularPopupBoxes.confirm('Apakah Anda Yakin Akan Menghapus Data Pembelian Ini?<br>Data Transaksi : '+ pembelian.nomor +' : '+ pembelian.penjual + '<br>Dengan Produk : '+ produk.kode + ' : '+ produk.nama).result.then(function() {
+			pembelian.one('produks', produk.id).remove().then(function() {
+				invalidateCache(pembelian);
+				$scope.search();
+			});
+		});
+	};
+	
+	$scope.removeAllProduk = function(pembelian) {
+		pembelian.one('produks').remove().then(function() {
+			invalidateCache(pembelian);
+		});
+	};
+	
 	// Open popup confirmation and delete user if user choose yes
 	$scope.remove = function(pembelian) {
 		angularPopupBoxes.confirm('Apakah Anda Yakin Akan Menghapus Data Pembelian Ini?\n'+ pembelian.nomor +'\n'+ pembelian.penjual).result.then(function() {
+			$scope.removeAllProduk(pembelian);
 			pembelian.remove().then(function() {
 				$scope.search();
 			});
@@ -78,4 +115,32 @@ angular.module('yamaApp').controller('PembelianCtrl', function ($scope, $modal, 
 			}
 		});
 	};
+}).controller('PembelianProdukFormCtrl', function($scope, $modalInstance, $cacheFactory, Produk, pembelian) {
+	$scope.pembelian = pembelian;
+	$scope.produks = [];
+
+	var invalidateCache = function() {
+		$cacheFactory.get('$http').remove(pembelian.one('produks').getRequestedUrl());
+	};
+
+	$scope.loadProduk = function(search) {
+		Produk.getList({ q: search }).then(function(produks) {
+			$scope.produks = produks;
+		});
+	};
+
+	$scope.addProduk = function(produk) {
+		pembelian.one('produks', produk.id).put().then(function() {
+			invalidateCache();
+		});
+	};
+
+	$scope.removeProduk = function(produk) {
+		pembelian.one('produks', produk.id).remove().then(function() {
+			invalidateCache();
+		});
+	};
+
+	$scope.done = $modalInstance.close;
+	//console.log('selesai');
 });

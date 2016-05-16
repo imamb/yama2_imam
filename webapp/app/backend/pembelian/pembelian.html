@@ -76,7 +76,8 @@
 													<th>Nama</th>
 													<th>Jumlah</th>
 													<th>Harga</th>
-													<!-- <th>Total</th> -->
+													<th>Total</th>
+													<th>Action</th>
 												</tr>
 											</thead>
 											<tbody>
@@ -86,6 +87,9 @@
 													<td>1</td>
 													<td>{{r.harga| currency:"Rp. "}}</td>
 													<td ng-init="pembelians.total.harga =pembelians.total.harga + r.harga">{{r.harga| currency:"Rp. "}}</td>
+													<td><a href="" class="btn btn-danger btn-xs" ng-click="removeProduk(pembelian,r)" title="Hapus Produk {{r.nama}}  dari Pembelian {{ pembelian.nomor }}">
+												<span class="fa fa-trash"></span></a></td>
+													
 												</tr>
 												<tr class="info">
 													<td colspan="4" class="text-right"><span class="control-label">Total Transaksi</span></td>
@@ -153,4 +157,36 @@
 			<span class="label label-danger" ng-show="error">Ops something went wrong!</span>
 		</div>
 	</form>
+</script>
+<script type="text/ng-template" id="pembelian.produk.html">
+	<div class="modal-header">
+		<h3 class="modal-title">Tambah Pembelian Produk <small ng-bind="'(' + pembelian.nomor + ' ' + pembelian.penjual + ')'"></small></h3>
+	</div>
+	<div class="modal-body">
+		<fieldset>
+			<div class="form-group">
+				<label class="control-label" for="produks">Produk</label>
+				<div class="controls">
+					<ui-select multiple ng-model="pembelian.produks" on-select="addProduk($item)" on-remove="removeProduk($item)">
+						<ui-select-match placeholder="Select Produk...">{{ $item.nama }}</ui-select-match>
+						<ui-select-choices repeat="produk in produks" refresh="loadProduk($select.search)">
+							<div ng-bind-html="produk.nama | highlight: $select.search"></div>
+							<small >
+								Stok : {{produk.stok}}
+								Harga : {{produk.harga}}
+								Keterangan : <span ng-bind-html="produk.keterangan | highlight: $select.search"> 
+								
+							</small>
+							<!-- <small ng-bind-html=" | highlight: $select.search"></small>
+							<small ng-bind-html=" | highlight: $select.search"></small> -->
+						</ui-select-choices>
+					</ui-select>
+				</div>
+			</div>
+		</fieldset>
+		<div class="modal-footer">
+			<a href="" class="btn btn-primary col-md-3 col-xs-12" ng-click="done()">Done</a>
+			<span class="label label-danger" ng-show="error">Ops something went wrong!</span>
+		</div>
+	</div>
 </script>

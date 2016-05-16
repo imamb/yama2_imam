@@ -1,10 +1,11 @@
 'use strict';
 
-//angular.module('yamaApp').controller('PenjualanCtrl', function ($scope, $modal, $location, Penjualan, angularPopupBoxes,$cacheFactory, Produk) {
-angular.module('yamaApp').controller('PenjualanCtrl', function ($scope, $modal, $location, Penjualan, angularPopupBoxes) {
+angular.module('yamaApp').controller('PenjualanCtrl', function ($scope, $modal, $location, Penjualan, angularPopupBoxes,$cacheFactory, Produk) {
+//angular.module('yamaApp').controller('PenjualanCtrl', function ($scope, $modal, $location, Penjualan, angularPopupBoxes) {
 	$scope.searchParams = $location.search();
 	$scope.searchParams.hash = 0;
 	$scope.page = 1;
+//	$scope.TotalTransaksi = 0;
 
 	// Search form submitted or page changed
 	$scope.search = function() {
@@ -17,16 +18,20 @@ angular.module('yamaApp').controller('PenjualanCtrl', function ($scope, $modal, 
 		Penjualan.getList($scope.searchParams).then(function(penjualans) {
 			$scope.penjualans = penjualans;
 			$scope.page = penjualans.meta.number + 1;
+//			$scope.TotalTransaksi = 0;
 			angular.forEach(penjualans,function(penjualan){
 				penjualan.getList('produks').then(function(produks){
 					penjualan.produks=produks;
-					//console.log('List Kategori'+news.categorys);
+//					$scope.TotalTransaksi += penjualan.produks.harga;
+//					console.log('Total '+ $scope.TotalTransaksi + ' ' +penjualan.produks.harga);
 				});
 			});
 		});
 	};
 
-
+//	$scope.calcTotal = function(penjualan){
+//	    return user.created * 10 + user.replied * 5 + user.read * 2;
+//	  }
 //
 //	$scope.TotalTransaksi=function(penjualan){
 //	      var summ=0;
@@ -77,19 +82,29 @@ angular.module('yamaApp').controller('PenjualanCtrl', function ($scope, $modal, 
 		});
 	};
 
-//	var invalidateCache = function() {
-//		$cacheFactory.get('$http').remove(penjualan.one('produks').getRequestedUrl());
-//	};
-//	
-//	$scope.removeProduk = function(produk) {
-//		penjualan.one('produks', produk.id).remove().then(function() {
-//			invalidateCache();
-//		});
-//	};
-//	
+	var invalidateCache = function(penjualan) {
+		$cacheFactory.get('$http').remove(penjualan.one('produks').getRequestedUrl());
+	};
+	
+	$scope.removeProduk = function(penjualan, produk) {
+		angularPopupBoxes.confirm('Apakah Anda Yakin Akan Menghapus Data Penjualan Ini?<br>Data Transaksi : '+ penjualan.nomor +' : '+ penjualan.pembeli + '<br>Dengan Produk : '+ produk.kode + ' : '+ produk.nama).result.then(function() {
+			penjualan.one('produks', produk.id).remove().then(function() {
+				invalidateCache(penjualan);
+				$scope.search();
+			});
+		});
+	};
+	
+	$scope.removeAllProduk = function(penjualan) {
+		penjualan.one('produks').remove().then(function() {
+			invalidateCache(penjualan);
+		});
+	};
+	
 	// Open popup confirmation and delete user if user choose yes
 	$scope.remove = function(penjualan) {
 		angularPopupBoxes.confirm('Apakah Anda Yakin Akan Menghapus Data Penjualan Ini?\n'+ penjualan.nomor +'\n'+ penjualan.pembeli).result.then(function() {
+			$scope.removeAllProduk(penjualan);
 			penjualan.remove().then(function() {
 				$scope.search();
 			});
